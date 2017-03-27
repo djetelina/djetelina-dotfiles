@@ -1,8 +1,0 @@
-# Aliases that are meant to be for zsh only - not compatible with bash
-
-alias zshconfig="vim ~/.zshrc"
-
-# ls -> k
-alias l="k -h"
-alias ll="k -h"
-alias la="l -ha"
