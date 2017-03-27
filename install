@@ -13,3 +13,8 @@ for dotfile in "${home_files[@]}"
 do
 		ln -sf $script_dir/$dotfile ~/$dotfile
 done
+
+if [ ! -d "~/.oh-my-zsh/custom/plugins/k" ]
+then
+        git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k
+fi
