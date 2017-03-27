@@ -1,0 +1,6 @@
+# Aliases that are meant to be for zsh only - not compatible with bash
+
+# ls -> k
+alias l="k -h"
+alias ll="k -h"
+alias la="l -ha"
