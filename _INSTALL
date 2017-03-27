@@ -8,25 +8,40 @@ current_dir=$(pwd)
 script_dir=$(dirname $0)
 if [ $script_dir = '.' ]; then script_dir="$current_dir"; fi
 
+# Colors
+CLEAR='\033[0m'
+GREEN='\033[00;32m'
+LIGHTGRAY='\033[00;37m'
+BLUE='\033[00;34m'
+
+
+printf "${BLUE}Launching install from '$script_dir'${CLEAR}\n"
+
 ########################
 # INSTALL NEEDED STUFF #
 ########################
-# Oh-my-zsh
-if [ -d "~/.oh-my-zsh" ]
-then
-        sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# oh-my-zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c $(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)
+    printf "\n${GREEN}oh-my-zsh has been installed${CLEAR}\n"
+else
+    printf "${LIGHTGRAY}."
 fi
 
 # k, better, git-aware version of ls
-if [ -d "~/.oh-my-zsh/custom/plugins/k" ]
-then
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/k" ]; then
         git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k
+        printf "\n${GREEN}k has been installed${CLEAR}\n"
+else
+    printf "${LIGHTGRAY}.${CLEAR}"
 fi
 
 # syntax highlighting
-if [ -d "~/.oh-my-zsh/custom/plugins/k" ]
-then
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        printf "\n${GREEN}syntax highlighting has been installed${CLEAR}\n"
+else
+        printf "${LIGHTGRAY}.${CLEAR}"
 fi
 
 #####################################
@@ -37,3 +52,5 @@ home_files=(zshrc bash_aliases zsh_aliases vimrc)
 for dotfile in "${home_files[@]}"; do
 		ln -sf $script_dir/$dotfile ~/.$dotfile
 done
+
+printf "\n${BLUE}All done!${CLEAR}\n"
