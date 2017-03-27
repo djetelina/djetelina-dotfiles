@@ -23,6 +23,12 @@ then
         git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k
 fi
 
+# syntax highlighting
+if [ -d "~/.oh-my-zsh/custom/plugins/k" ]
+then
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+fi
+
 #####################################
 # COPY ALL .FILES TO HOME DIRECTORY #
 #####################################

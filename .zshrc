@@ -1,17 +1,43 @@
-if [ "$HOST" = "david-Latitude-E7470" ]; then
-    DEFAULT_USER="david"
-else
-    DEFAULT_USER="djetelina"
-fi
-
-export PATH=$PATH:~/.local/bin:~/mygo/bin
-export ZSH=~/.oh-my-zsh
+###########
+# GENERAL #
+###########
+# Self-explanatory settings
+DEFAULT_USER=`whoami`
+HYPHEN_INSENSITIVE="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+HIST_STAMPS="dd.mm.yyyy"
+# Less syntax highlighting :)
 export LESS=' -RN '
 export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+# Some variables
+export PATH=$PATH:~/.local/bin:~/mygo/bin
+export ZSH=~/.oh-my-zsh
+export LANG=en_US.UTF-8
+export EDITOR='vim'
+export BROWSER='chrome'
 
+###################
+# PLUGIN SELECTOR #
+###################
+plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv heroku)
+
+############################
+# DIRECTORY HISTORY PLUGIN #
+############################
+# No oh-my-zsh hook :(
+source ~/zsh-directory-history/directory-history.plugin.zsh
+# Some key bindings for this
+bindkey '\e[A' directory-history-search-backward
+bindkey '\e[B' directory-history-search-forward
+bindkey '^j' history-substring-search-up
+bindkey '^k' history-substring-search-down
+
+###########
+# THEMING #
+###########
 ZSH_THEME="powerlevel9k/powerlevel9k"
-
-# POWERLEVEL stuff
 POWERLEVEL9K_MODE='awesome-fontconfig'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
@@ -37,21 +63,26 @@ POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND="green"
 POWERLEVEL9K_VIRTUALENV_BACKGROUND="black"
 POWERLEVEL9K_VIRTUALENV_FOREGROUND="green"
 
-# Normal stufff
-HYPHEN_INSENSITIVE="true"
-ENABLE_CORRECTION="true"
-COMPLETION_WAITING_DOTS="true"
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-HIST_STAMPS="dd.mm.yyyy"
+###############
+# KEYBINDINGS #
+###############
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
 
-# ZSH Plugins
-plugins=(command-not-found debian gitfast k)
+###########
+# ALIASES #
+###########
+source ~/.bash_aliases
+source ~/.zsh_aliases
 
-source $ZSH/oh-my-zsh.sh
+#################################
+# JENKINS CLIE CUSTOM FUNCTIONS #
+#################################
+# Default api kinda sucks
+# now instead of typing `jenkins start deployed_clientzone_test` 
+# just do `deploy clientzone test`
 
-export LANG=en_US.UTF-8
-export EDITOR='vim'
-
+# Eventually this will be replaced by custom script with loads more functionality I think
 function deploy() {
     if [ -n "$1" ]; then
         if [ -n "$2" ]; then
@@ -80,17 +111,7 @@ function unittest() {
     fi
 }
 
-alias zshconfig="vim ~/.zshrc"
-alias ssh="ssh -X"
-bindkey '\e[A' directory-history-search-backward
-bindkey '\e[B' directory-history-search-forward
-bindkey '^j' history-substring-search-up
-bindkey '^k' history-substring-search-down
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
+#----------------------------------------------------------------------
 
-
-source ~/.zsh_aliases
-source ~/zsh-directory-history/directory-history.plugin.zsh
-source ~/.bash_aliases
-source /home/david/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Load oh-my-zsh, this should always be at the bottom
+source $ZSH/oh-my-zsh.sh
