@@ -50,13 +50,7 @@ plugins=(command-not-found debian gitfast k)
 source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
-
-
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
+export EDITOR='vim'
 
 function deploy() {
     if [ -n "$1" ]; then
@@ -86,7 +80,7 @@ function unittest() {
     fi
 }
 
-alias zshconfig="vim ~/personal/djetelina-dotfiles/.zshrc"
+alias zshconfig="vim ~/.zshrc"
 alias ssh="ssh -X"
 bindkey '\e[A' directory-history-search-backward
 bindkey '\e[B' directory-history-search-forward

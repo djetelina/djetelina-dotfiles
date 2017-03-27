@@ -1,20 +1,33 @@
 #!/bin/bash
+
+####################
+# HELPER VARIABLES #
+####################
+# Find out where install is located - source directory for everything we need
 current_dir=$(pwd)
 script_dir=$(dirname $0)
+if [ $script_dir = '.' ]; then script_dir="$current_dir"; fi
 
-if [ $script_dir = '.' ]
+########################
+# INSTALL NEEDED STUFF #
+########################
+# Oh-my-zsh
+if [ -d "~/.oh-my-zsh" ]
 then
-        script_dir="$current_dir"
+        sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
-home_files=(.zshrc .bash_aliases .zsh_aliases .vimrc)
-
-for dotfile in "${home_files[@]}"
-do
-		ln -sf $script_dir/$dotfile ~/$dotfile
-done
-
-if [ ! -d "~/.oh-my-zsh/custom/plugins/k" ]
+# k, better, git-aware version of ls
+if [ -d "~/.oh-my-zsh/custom/plugins/k" ]
 then
         git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k
 fi
+
+#####################################
+# COPY ALL .FILES TO HOME DIRECTORY #
+#####################################
+home_files=(.zshrc .bash_aliases .zsh_aliases .vimrc)
+
+for dotfile in "${home_files[@]}"; do
+		ln -sf $script_dir/$dotfile ~/$dotfile
+done
