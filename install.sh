@@ -10,5 +10,5 @@ home_files=(.zshrc .bash_aliases .zsh_aliases .vimrc)
 
 for dotfile in home_files
 do
-		ln -sf $script_dir/$dotfile ~/dotfile
+		ln -sf $script_dir/$dotfile ~/$dotfile
 done
