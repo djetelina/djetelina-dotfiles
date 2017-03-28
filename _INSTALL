@@ -49,7 +49,7 @@ for package in "${pip_packages[@]}"; do
     found=`pip freeze | grep ${package}`
     if [ -z "${found}" ]; then
         printf "\n${BLUE}Installing ${package} from pip${CLEAR}\n"
-        pip install --user ${package}
+        sudo pip install ${package}
     else
         printf "${LIGHTGRAY}.${CLEAR}"
     fi
