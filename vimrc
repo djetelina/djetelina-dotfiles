@@ -1,6 +1,5 @@
-execute pathogen#infect()
 colorscheme monokai
-filetype plugin indent on
+filetype indent on
 syntax enable
 set nocompatible
 set smartindent
