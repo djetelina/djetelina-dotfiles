@@ -44,15 +44,17 @@ done
 # pip install section
 pip2_packages=(powerline-status)
 
-printf "\n\n${BLUE}Installing things from PIP${CLEAR}\n"
+printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
 for package in "${pip2_packages[@]}"; do
-    pip2 install --user ${package}
+    pip2 -q -q -q install --user ${package}
+    printf "${LIGHTGRAY}.${CLEAR}"
 done
 
 default_pip_packages=(python-jenkins)
 
 for package in "${default_pip_packages[@]}"; do
-    pip install --user ${package}
+    pip -q -q -q install --user ${package}
+    printf "${LIGHTGRAY}.${CLEAR}"
 done
 
 printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
