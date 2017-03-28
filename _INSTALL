@@ -13,21 +13,49 @@ CLEAR='\033[0m'
 GREEN='\033[00;32m'
 LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
+RED='\033[0;31m'
 
-printf "${BLUE}Launching install from '$script_dir'${CLEAR}\n"
+##################
+# CHECK FOR SUDO #
+##################
+if [[ $EUID -ne 0 ]]; then
+   printf "${RED}ERROR!${CLEAR} This script must be run as root, try '${BLUE}sudo !!${CLEAR}'\n" 
+   exit 1
+fi
+
+printf "${BLUE}Launching install from '$script_dir'${CLEAR}"
 
 ########################
 # INSTALL NEEDED STUFF #
 ########################
-needed_packages=(powerline python-powerline vim-pathogen)
+# apt section
+needed_packages=()
+
+printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
 for package in "${needed_packages[@]}"; do
     if [ $(dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "\n${BLUE}${package} required${CLEAR}\n"
-        apt-get install $package
+        sudo apt-get install $package
     else
         printf "${LIGHTGRAY}.${CLEAR}"
     fi
 done
+
+# pip install section
+pip_packages=(powerline-status python-jenkins)
+
+printf "\n\n${BLUE}Installing things from PIP${CLEAR}\n"
+for package in "${pip_packages[@]}"; do
+    found=`pip freeze | grep ${package}`
+    if [ -z "${found}" ]; then
+        printf "\n${BLUE}Installing ${package} from pip${CLEAR}\n"
+        pip install --no-cache-dir -q -q -q --user ${package}
+    else
+        printf "${LIGHTGRAY}.${CLEAR}"
+    fi
+done
+
+printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
 
 # oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -62,4 +90,4 @@ for dotfile in "${home_files[@]}"; do
 		ln -sf $script_dir/$dotfile ~/.$dotfile
 done
 
-printf "\n${BLUE}All done!${CLEAR}\n"
+printf "\n\n${BLUE}All done!${CLEAR}\n"

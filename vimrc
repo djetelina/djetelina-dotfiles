@@ -18,9 +18,6 @@ set showmatch
 set incsearch
 set hlsearch
 set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
-
-" Always show statusline
+set whichwrap+=<,>,h,l,[,]
 set laststatus=2
-
-" Use 256 colours (Use this setting only if your terminal supports 256 colours)
 set t_Co=256
