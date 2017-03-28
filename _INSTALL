@@ -14,12 +14,21 @@ GREEN='\033[00;32m'
 LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
 
-
 printf "${BLUE}Launching install from '$script_dir'${CLEAR}\n"
 
 ########################
 # INSTALL NEEDED STUFF #
 ########################
+needed_packages=(powerline python-powerline vim-pathogen)
+for package in "${needed_packages[@]}"; do
+    if [ $(dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+        printf "\n${BLUE}${package} required${CLEAR}\n"
+        apt-get install $package
+    else
+        printf "${LIGHTGRAY}.${CLEAR}"
+    fi
+done
+
 # oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c $(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)
