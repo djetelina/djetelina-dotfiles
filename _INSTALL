@@ -29,7 +29,7 @@ printf "${BLUE}Launching install from '$script_dir'${CLEAR}"
 # INSTALL NEEDED STUFF #
 ########################
 # apt section
-needed_packages=()
+needed_packages=(python2.7)
 
 printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
 for package in "${needed_packages[@]}"; do
@@ -42,17 +42,17 @@ for package in "${needed_packages[@]}"; do
 done
 
 # pip install section
-pip_packages=(powerline-status python-jenkins)
+pip2_packages=(powerline-status)
 
 printf "\n\n${BLUE}Installing things from PIP${CLEAR}\n"
-for package in "${pip_packages[@]}"; do
-    found=`pip freeze | grep ${package}`
-    if [ -z "${found}" ]; then
-        printf "\n${BLUE}Installing ${package} from pip${CLEAR}\n"
-        pip install --user ${package}
-    else
-        printf "${LIGHTGRAY}.${CLEAR}"
-    fi
+for package in "${pip2_packages[@]}"; do
+    pip2 install --user ${package}
+done
+
+default_pip_packages=(python-jenkins)
+
+for package in "${default_pip_packages[@]}"; do
+    pip install --user ${package}
 done
 
 printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
