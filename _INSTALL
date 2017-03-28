@@ -15,9 +15,9 @@ LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
 RED='\033[0;31m'
 
-##################
-# CHECK FOR SUDO #
-##################
+##########
+# CHECKS #
+##########
 if [[ $EUID -ne 0 ]]; then
    printf "${RED}ERROR!${CLEAR} This script must be run as root, try '${BLUE}sudo !!${CLEAR}'\n" 
    exit 1
@@ -49,7 +49,7 @@ for package in "${pip_packages[@]}"; do
     found=`pip freeze | grep ${package}`
     if [ -z "${found}" ]; then
         printf "\n${BLUE}Installing ${package} from pip${CLEAR}\n"
-        sudo pip install ${package}
+        pip install --user ${package}
     else
         printf "${LIGHTGRAY}.${CLEAR}"
     fi
