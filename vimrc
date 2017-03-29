@@ -35,3 +35,4 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['flake8', 'pydocstyle', 'python']
 let g:syntastic_python_flake8_args = "--ignore E501,E126,F401,E124,E402,W503,E121"
+let g:syntastic_sh_shellcheck_args = "-e SC2059 -e SC2046"
