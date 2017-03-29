@@ -17,7 +17,7 @@ BLUE='\033[00;34m'
 
 if [ "$USER" = "root" && $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed" ) -eq 0 ]; then
     apt-get install sudo
-done
+fi
 
 ####################
 # HELPER FUNCTIONS #
