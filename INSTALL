@@ -44,7 +44,7 @@ cd "$script_dir" && git pull
 ########################
 # INSTALL NEEDED STUFF #
 ########################
-printf "${BLUE}\nChecking and installing dependencies${CLEAR}\n"
+printf "${BLUE}\nChecking and installing dependencies from${CLEAR}\n"
 
 # apt section
 needed_packages=(python2.7 shellcheck) 
