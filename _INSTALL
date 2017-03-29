@@ -19,14 +19,14 @@ BLUE='\033[00;34m'
 # HELPER FUNCTIONS #
 ####################
 function greydot() {
-    printf "%s.%s" "$LIGHTGRAY" "$CLEAR"
+    printf "${LIGHTGRAY}.${CLEAR}"
 }
 
 function ok_installed() {
-    printf "\n%s%s has been installed%s\n" "$GREEN" "$1" "$CLEAR"
+    printf "\n${GREEN}%s has been installed${CLEAR}\n" "$1"
 }
 
-printf "%sLaunching install from '%s'%s" "$BLUE" "$script_dir" "$CLEAR"
+printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
 
 ########################
 # INSTALL NEEDED STUFF #
@@ -34,7 +34,7 @@ printf "%sLaunching install from '%s'%s" "$BLUE" "$script_dir" "$CLEAR"
 # apt section
 needed_packages=(python2.7 flake8 shellcheck) 
 
-printf "\n\n%sChecking for required apt packages%s\n" "$BLUE" "$CLEAR"
+printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
 for package in "${needed_packages[@]}"; do
     if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         printf "\n%s%s required%s\n" "$BLUE" "$package" "$CLEAR"
@@ -49,7 +49,7 @@ done
 pip2_packages=(powerline-status bashate)
 default_pip_packages=(python-jenkins pydocstyle)
 
-printf "\n\n%sInstalling things from pip%s\n" "$BLUE" "$CLEAR"
+printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
 for package in "${pip2_packages[@]}"; do
     pip2 -q -q -q install --user "${package}"
     greydot
@@ -61,7 +61,7 @@ for package in "${default_pip_packages[@]}"; do
 done
 
 # plugins from git
-printf "\n\n%sChecking for various plugins from git%s\n" "$BLUE" "$CLEAR"
+printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
 
 ## VIM
 # pathogen
@@ -123,4 +123,4 @@ for dotfile in "${home_files[@]}"; do
         ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
 
-printf "\n\n%sAll done!%s\n" "$BLUE" "$CLEAR"
+printf "\n\n${BLUE}All done!${CLEAR}\n"
