@@ -15,14 +15,6 @@ LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
 RED='\033[0;31m'
 
-##########
-# CHECKS #
-##########
-if [[ $EUID -ne 0 ]]; then
-   printf "${RED}ERROR!${CLEAR} This script must be run as root, try '${BLUE}sudo !!${CLEAR}'\n" 
-   exit 1
-fi
-
 printf "${BLUE}Launching install from '$script_dir'${CLEAR}"
 
 ########################
@@ -44,7 +36,7 @@ done
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status)
-default_pip_packages=(python-jenkins)
+default_pip_packages=(python-jenkins pydocstyle)
 
 printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
 for package in "${pip2_packages[@]}"; do
@@ -60,6 +52,27 @@ done
 # plugins from git
 printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
 
+## VIM
+# pathogen
+if [ ! -f "$HOME/.vim/autoload/pathogen.vim" ]; then
+    mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+    chown -R $SUDO_USER:$SUDO_USER ~/.vim/autoload
+    chown -R $SUDO_USER:$SUDO_USER ~/.vim/bundle
+    printf "\n${GREEN}vim-pathogen has been installed${CLEAR}\n"
+else
+    printf "${LIGHTGRAY}."
+fi
+
+# Syntastic
+if [ ! -d "$HOME/.vim/bundle/syntastic" ]; then
+    cd ~/.vim/bundle && git clone --depth=1 https://github.com/vim-syntastic/syntastic.git
+    chown -R $SUDO_USER:$SUDO_USER ~/.vim/bundle/syntastic
+    printf "\n${GREEN}syntastic has been installed${CLEAR}\n"
+else
+    printf "${LIGHTGRAY}."
+fi
+
+## ZSH
 # oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c $(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)

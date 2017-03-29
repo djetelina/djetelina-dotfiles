@@ -1,7 +1,8 @@
 colorscheme monokai
-filetype indent on
 syntax enable
 set nocompatible
+execute pathogen#infect()
+filetype plugin indent on
 set smartindent
 set ruler
 set backspace=2
@@ -23,3 +24,13 @@ set t_Co=256
 set mouse=a
 set list
 set listchars=tab:>-
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_python_flake8_args = "--ignore E501,E126,F401,E124,E402,W503,E121"
