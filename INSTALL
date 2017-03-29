@@ -42,9 +42,13 @@ function checks_done() {
     printf " ${GREEN}done!${CLEAR}\n"
 }
 
-printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
-printf "\n${BLUE}Pulling latest version of self${CLEAR}\n"
-cd "$script_dir" && git pull
+if [ "$1" != "postpull" ]; then
+    printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
+    printf "\n${BLUE}Pulling latest version of self${CLEAR}\n"
+    cd "$script_dir" && git pull
+    $script_dir/INSTALL postpull
+    exit 0
+fi
 
 ########################
 # INSTALL NEEDED STUFF #
@@ -182,7 +186,9 @@ for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
 
-printf "\n${BLUE}Changing default shell to zsh${CLEAR}\n"
-chsh -s /bin/zsh `whoami`
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    printf "\n${BLUE}Changing default shell to zsh${CLEAR}\n"
+    chsh -s /usr/bin/zsh $(whoami)
+fi
 
-printf "\n\n${GREEN}All done!${CLEAR}\n"
+printf "\n${GREEN}All done!${CLEAR}\n"
