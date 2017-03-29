@@ -5,96 +5,113 @@
 ####################
 # Find out where install is located - source directory for everything we need
 current_dir=$(pwd)
-script_dir=$(dirname $0)
-if [ $script_dir = '.' ]; then script_dir="$current_dir"; fi
+script_dir=$(dirname "$0")
+if [ "$script_dir" = '.' ]; then script_dir="$current_dir"; fi
 
 # Colors
 CLEAR='\033[0m'
 GREEN='\033[00;32m'
 LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
-RED='\033[0;31m'
+# RED='\033[0;31m'
 
-printf "${BLUE}Launching install from '$script_dir'${CLEAR}"
+####################
+# HELPER FUNCTIONS #
+####################
+function greydot() {
+    printf "%s.%s" "$LIGHTGRAY" "$CLEAR"
+}
+
+function ok_installed() {
+    printf "\n%s%s has been installed%s\n" "$GREEN" "$1" "$CLEAR"
+}
+
+printf "%sLaunching install from '%s'%s" "$BLUE" "$script_dir" "$CLEAR"
 
 ########################
 # INSTALL NEEDED STUFF #
 ########################
 # apt section
-needed_packages=(python2.7 flake8)
+needed_packages=(python2.7 flake8 shellcheck) 
 
-printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
+printf "\n\n%sChecking for required apt packages%s\n" "$BLUE" "$CLEAR"
 for package in "${needed_packages[@]}"; do
-    if [ $(dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-        printf "\n${BLUE}${package} required${CLEAR}\n"
-        sudo apt-get install $package
+    if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+        printf "\n%s%s required%s\n" "$BLUE" "$package" "$CLEAR"
+        sudo apt-get install "$package"
     else
-        printf "${LIGHTGRAY}.${CLEAR}"
+        greydot
     fi
 done
 
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
-pip2_packages=(powerline-status)
+pip2_packages=(powerline-status bashate)
 default_pip_packages=(python-jenkins pydocstyle)
 
-printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
+printf "\n\n%sInstalling things from pip%s\n" "$BLUE" "$CLEAR"
 for package in "${pip2_packages[@]}"; do
-    pip2 -q -q -q install --user ${package}
-    printf "${LIGHTGRAY}.${CLEAR}"
+    pip2 -q -q -q install --user "${package}"
+    greydot
 done
 
 for package in "${default_pip_packages[@]}"; do
-    pip -q -q -q install --user ${package}
-    printf "${LIGHTGRAY}.${CLEAR}"
+    pip -q -q -q install --user "${package}"
+    greydot
 done
 
 # plugins from git
-printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
+printf "\n\n%sChecking for various plugins from git%s\n" "$BLUE" "$CLEAR"
 
 ## VIM
 # pathogen
 if [ ! -f "$HOME/.vim/autoload/pathogen.vim" ]; then
     mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-    chown -R $SUDO_USER:$SUDO_USER ~/.vim/autoload
-    chown -R $SUDO_USER:$SUDO_USER ~/.vim/bundle
-    printf "\n${GREEN}vim-pathogen has been installed${CLEAR}\n"
+    ok_installed vim-pathogen
 else
-    printf "${LIGHTGRAY}."
+    greydot
 fi
 
 # Syntastic
 if [ ! -d "$HOME/.vim/bundle/syntastic" ]; then
     cd ~/.vim/bundle && git clone --depth=1 https://github.com/vim-syntastic/syntastic.git
-    chown -R $SUDO_USER:$SUDO_USER ~/.vim/bundle/syntastic
-    printf "\n${GREEN}syntastic has been installed${CLEAR}\n"
+    ok_installed syntastic
 else
-    printf "${LIGHTGRAY}."
+    greydot
 fi
+
+# jedi
+if [ ! -d "$HOME/.vim/bundle/jedi-vim" ]; then
+    cd ~/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git
+    ok_installed vim-jedi
+else
+    greydot
+fi
+
 
 ## ZSH
 # oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    sh -c $(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)
-    printf "\n${GREEN}oh-my-zsh has been installed${CLEAR}\n"
+    sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    ok_installed oh-my-zsh
 else
-    printf "${LIGHTGRAY}."
+    greydot
 fi
 
 # k, better, git-aware version of ls
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/k" ]; then
-        git clone https://github.com/supercrabtree/k $HOME/.oh-my-zsh/custom/plugins/k
-        printf "\n${GREEN}k has been installed${CLEAR}\n"
+        git clone https://github.com/supercrabtree/k "$HOME/.oh-my-zsh/custom/plugins/k"
+        ok_installed k
 else
-    printf "${LIGHTGRAY}.${CLEAR}"
+    greydot
 fi
 
 # syntax highlighting
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-        printf "\n${GREEN}syntax highlighting has been installed${CLEAR}\n"
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        ok-installed zsh-syntax-highlighting
 else
-        printf "${LIGHTGRAY}.${CLEAR}"
+        greydot
 fi
 
 #####################################
@@ -103,7 +120,7 @@ fi
 home_files=(zshrc bash_aliases zsh_aliases vimrc)
 
 for dotfile in "${home_files[@]}"; do
-        ln -sf $script_dir/$dotfile ~/.$dotfile
+        ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
 
-printf "\n\n${BLUE}All done!${CLEAR}\n"
+printf "\n\n%sAll done!%s\n" "$BLUE" "$CLEAR"
