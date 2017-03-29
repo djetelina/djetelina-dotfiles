@@ -32,12 +32,12 @@ printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
 # INSTALL NEEDED STUFF #
 ########################
 # apt section
-needed_packages=(python2.7 flake8 shellcheck) 
+needed_packages=(python2.7 shellcheck) 
 
 printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
 for package in "${needed_packages[@]}"; do
     if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-        printf "\n%s%s required%s\n" "$BLUE" "$package" "$CLEAR"
+        printf "\n${BLUE}%s required${CLEAR}\n" "$package"
         sudo apt-get install "$package"
     else
         greydot
@@ -47,7 +47,7 @@ done
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status bashate)
-default_pip_packages=(python-jenkins pydocstyle)
+default_pip_packages=(python-jenkins pydocstyle flake8)
 
 printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
 for package in "${pip2_packages[@]}"; do
