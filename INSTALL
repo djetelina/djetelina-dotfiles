@@ -15,7 +15,9 @@ LIGHTGRAY='\033[00;37m'
 BLUE='\033[00;34m'
 # RED='\033[0;31m'
 
-header_number=0
+if [ "$USER" = "root" && $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed" ) -eq 0 ]; then
+    apt-get install sudo
+done
 
 ####################
 # HELPER FUNCTIONS #
@@ -28,44 +30,30 @@ function ok_installed() {
     printf "\n${GREEN}%s has been installed${CLEAR}\n" "$1"
 }
 
-function header() {
-    ((header_number++))
-    printf "${BLUE}%s) ${GREEN}%s${BLUE}:${CLEAR} " "$header_number" "$1"
-}
-
-function checks_done() {
-    printf " ${GREEN}done!${CLEAR}\n"
-}
-
 printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
-printf "\n${BLUE}Pulling latest version of self${CLEAR}\n"
-cd "$script_dir" && git pull
 
 ########################
 # INSTALL NEEDED STUFF #
 ########################
-printf "${BLUE}\nChecking and installing dependencies from${CLEAR}\n"
-
 # apt section
-needed_packages=(python2.7 shellcheck) 
+needed_packages=(python2.7 shellcheck python-pip python3-pip zsh) 
 
-header "apt"
+printf "\n\n${BLUE}Checking for required apt packages${CLEAR}\n"
 for package in "${needed_packages[@]}"; do
     if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-            printf "\n${BLUE}Apt package ${GREEN}%s${BLUE} is not installed, trying to install (${RED}sudo${BLUE} password may be required)${CLEAR}\n" "$package"
+        printf "\n${BLUE}%s required${CLEAR}\n" "$package"
         sudo apt-get install "$package"
     else
         greydot
     fi
 done
-checks_done
 
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status bashate)
 default_pip_packages=(python-jenkins pydocstyle flake8)
 
-header "pip"
+printf "\n\n${BLUE}Installing things from pip${CLEAR}\n"
 for package in "${pip2_packages[@]}"; do
     pip2 -q -q -q install --user "${package}"
     greydot
@@ -75,13 +63,14 @@ for package in "${default_pip_packages[@]}"; do
     pip -q -q -q install --user "${package}"
     greydot
 done
-checks_done
 
 # plugins from git
-header "git"
+printf "\n\n${BLUE}Checking for various plugins from git${CLEAR}\n"
+
 ## VIM
 # pathogen
 if [ ! -f "$HOME/.vim/autoload/pathogen.vim" ]; then
+    printf "\n${BLUE}pathogen required${CLEAR}\n"
     mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
     ok_installed vim-pathogen
 else
@@ -90,6 +79,7 @@ fi
 
 # Syntastic
 if [ ! -d "$HOME/.vim/bundle/syntastic" ]; then
+    printf "\n${BLUE}syntastic required${CLEAR}\n"
     cd ~/.vim/bundle && git clone --depth=1 https://github.com/vim-syntastic/syntastic.git
     ok_installed syntastic
 else
@@ -98,6 +88,7 @@ fi
 
 # jedi
 if [ ! -d "$HOME/.vim/bundle/jedi-vim" ]; then
+    printf "\n${BLUE}jedi-vim required${CLEAR}\n"
     cd ~/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git
     ok_installed vim-jedi
 else
@@ -108,6 +99,7 @@ fi
 ## ZSH
 # oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    printf "\n${BLUE}oh-my-zsh required${CLEAR}\n"
     sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     ok_installed oh-my-zsh
 else
@@ -116,6 +108,7 @@ fi
 
 # k, better, git-aware version of ls
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/k" ]; then
+        printf "\n${BLUE}k required${CLEAR}\n"
         git clone https://github.com/supercrabtree/k "$HOME/.oh-my-zsh/custom/plugins/k"
         ok_installed k
 else
@@ -124,13 +117,12 @@ fi
 
 # syntax highlighting
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+        printf "\n${BLUE}zsh-syntax-highlighting required${CLEAR}\n"
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-        ok-installed zsh-syntax-highlighting
+        ok_installed zsh-syntax-highlighting
 else
         greydot
 fi
-
-checks_done
 
 #####################################
 # COPY ALL .FILES TO HOME DIRECTORY #
@@ -141,4 +133,4 @@ for dotfile in "${home_files[@]}"; do
         ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
 
-printf "\n${GREEN}All done!${CLEAR}\n"
+printf "\n\n${BLUE}All done!${CLEAR}\n"
