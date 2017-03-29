@@ -16,7 +16,7 @@ BLUE='\033[00;34m'
 # RED='\033[0;31m'
 
 # If ran as root in docker
-if [ "$EUID" -e 0 ] && [ $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed" ) -eq 0 ]; then
+if [ "$EUID" -eq 0 ] && [ $(dpkg-query -W -f='${Status}' sudo 2>/dev/null | grep -c "ok installed" ) -eq 0 ]; then
     apt-get install sudo
 fi
 
