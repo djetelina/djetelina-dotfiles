@@ -9,6 +9,7 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd.mm.yyyy"
 # Less syntax highlighting :)
+export TERM="xterm-256color"
 export LESS=' -RN '
 export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
 # Some variables

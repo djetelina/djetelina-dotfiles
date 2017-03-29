@@ -137,8 +137,8 @@ fi
 # directory history
 if [ ! -e "/usr/bin/dirhist" ]; then
     printf "\n${BLUE}zsh-directory-history required${CLEAR}\n"
-    git clone https://github.com/tymm/zsh-directory-history "$script_dir/directory-history"
-    sudo cp "$script_dir/directory-history/dirhist" /usr/bin
+    git clone https://github.com/tymm/zsh-directory-history "$HOME/zsh-directory-history"
+    sudo cp "$HOME/zsh-directory-history/dirhist" /usr/bin
     ok_installed zsh-directory-history
 else
     greydot
@@ -158,9 +158,12 @@ fi
 #####################################
 home_files=(zshrc bash_aliases zsh_aliases vimrc)
 
-printf "\n${BLUE}Make symlinks for dotfiles${CLEAR}\n"
+printf "\n${BLUE}Creating symlinks for dotfiles${CLEAR}\n"
 for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
+
+printf "\n${BLUE}Changing default shell to zsh${CLEAR}\n"
+chsh -s /bin/zsh `whoami`
 
 printf "\n\n${BLUE}All done!${CLEAR}\n"
