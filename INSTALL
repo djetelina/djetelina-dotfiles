@@ -186,7 +186,7 @@ for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
 
-if [ "$SHELL" != "/usr/bin/zsh" ]; then
+if [ "$SHELL" != "/usr/bin/zsh" ] || [ "$SHELL" != "/bin/zsh" ] ; then
     printf "\n${BLUE}Changing default shell to zsh${CLEAR}\n"
     chsh -s /usr/bin/zsh $(whoami)
 fi
