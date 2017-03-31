@@ -70,7 +70,7 @@ checks_done
 
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
-pip2_packages=(powerline-status bashate)
+pip2_packages=(powerline-status)
 default_pip_packages=(python-jenkins pydocstyle flake8)
 pip2 > /dev/null &>2
 pip2_status=$?
