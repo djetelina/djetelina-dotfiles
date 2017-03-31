@@ -75,12 +75,12 @@ default_pip_packages=(python-jenkins pydocstyle flake8)
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    pip2 -q -q -q install --user "${package}"
+    pip2 -q -q -q install --user --upgrade "${package}"
     greydot
 done
 
 for package in "${default_pip_packages[@]}"; do
-    pip -q -q -q install --user "${package}"
+    pip -q -q -q install --user --upgrade "${package}"
     greydot
 done
 checks_done
