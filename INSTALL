@@ -77,10 +77,10 @@ printf "%s" "${which_pip2}"
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    if [ "${which_pip2}" = 'pip2 not found' ]; then
-        pip -q -q -q install --user --upgrade "${package}"
-    else
+    if pip2 --version; then
         pip2 -q -q -q install --user --upgrade "${package}"
+    else
+        pip -q -q -q install --user --upgrade "${package}"
     fi
     greydot
 done
