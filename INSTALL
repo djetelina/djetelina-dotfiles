@@ -75,12 +75,16 @@ default_pip_packages=(python-jenkins pydocstyle flake8)
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    python2 -m pip -q -q -q install --user --upgrade "${package}"
+    if [ $(which pip2) = 'pip2 not found' ]; then
+        pip -q -q -q install --user --upgrade "${package}"
+    else
+        pip2 -q -q -q install --user --upgrade "${package}"
+    fi
     greydot
 done
 
 for package in "${default_pip_packages[@]}"; do
-    python -m pip -q -q -q install --user --upgrade "${package}"
+    pip -q -q -q install --user --upgrade "${package}"
     greydot
 done
 checks_done
