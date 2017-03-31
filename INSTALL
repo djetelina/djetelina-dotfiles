@@ -43,9 +43,8 @@ function checks_done() {
 }
 
 if [ "$1" != "postpull" ]; then
-    printf "${BLUE}Launching install from '%s'${CLEAR}" "$script_dir"
-    printf "\n${BLUE}Pulling latest version of self${CLEAR}\n"
-    cd "$script_dir" && git pull
+    printf "${BLUE}Fetching latest changes${CLEAR}\n"
+    cd "$script_dir" && git pull -q
     $script_dir/INSTALL postpull
     exit 0
 fi
@@ -176,6 +175,19 @@ fi
 
 checks_done
 
+###########
+# UPDATES #
+###########
+
+printf "${BLUE}Updating plugins and themes${CLEAR}\n"
+header "zsh"
+find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+checks_done
+header "vim"
+find "$HOME/.vim" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+checks_done
+
 #####################################
 # COPY ALL .FILES TO HOME DIRECTORY #
 #####################################
@@ -185,10 +197,5 @@ printf "\n${BLUE}Creating symlinks for dotfiles${CLEAR}\n"
 for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
-
-if [ ! "$SHELL" == "/usr/bin/zsh" -o "$SHELL" == "/bin/zsh" ] ; then
-    printf "\n${BLUE}Changing default shell to zsh${CLEAR}\n"
-    chsh -s /usr/bin/zsh $(whoami)
-fi
 
 printf "\n${GREEN}All done!${CLEAR}\n"
