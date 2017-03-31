@@ -72,12 +72,10 @@ checks_done
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status bashate)
 default_pip_packages=(python-jenkins pydocstyle flake8)
-which_pip2=$(which pip2)
-printf "%s" "${which_pip2}"
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    if pip2 --version; then
+    if $(pip2 --version); then
         pip2 -q -q -q install --user --upgrade "${package}"
     else
         pip -q -q -q install --user --upgrade "${package}"
