@@ -75,7 +75,7 @@ default_pip_packages=(python-jenkins pydocstyle flake8)
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    if [ "$(which pip2)" == 'pip2 not found' ]; then
+    if [ "$(which pip2)" = 'pip2 not found' ]; then
         pip -q -q -q install --user --upgrade "${package}"
     else
         pip2 -q -q -q install --user --upgrade "${package}"
