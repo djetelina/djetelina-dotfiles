@@ -75,12 +75,12 @@ default_pip_packages=(python-jenkins pydocstyle flake8)
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    pip2 -q -q -q install --user --upgrade "${package}"
+    python2 -m pip -q -q -q install --user --upgrade "${package}"
     greydot
 done
 
 for package in "${default_pip_packages[@]}"; do
-    pip -q -q -q install --user --upgrade "${package}"
+    python -m pip -q -q -q install --user --upgrade "${package}"
     greydot
 done
 checks_done
@@ -181,6 +181,7 @@ checks_done
 
 printf "${BLUE}Updating plugins and themes${CLEAR}\n"
 header "zsh"
+# Find all folders called .git in X and execute this in them:
 find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
 find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
 checks_done
