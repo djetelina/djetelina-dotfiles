@@ -45,7 +45,7 @@ function checks_done() {
 if [ "$1" != "postpull" ]; then
     printf "${BLUE}Fetching latest changes${CLEAR}\n"
     cd "$script_dir" && git pull -q
-    $script_dir/INSTALL postpull
+    "$script_dir"/INSTALL postpull
     exit 0
 fi
 
@@ -72,13 +72,15 @@ checks_done
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status bashate)
 default_pip_packages=(python-jenkins pydocstyle flake8)
+pip2 > /dev/null &>2
+pip2_status=$?
 
 header "pip"
 for package in "${pip2_packages[@]}"; do
-    if $(pip2 --version); then
-        pip2 -q -q -q install --user --upgrade "${package}"
-    else
+    if [ $pip2_status -eq 127 ]; then
         pip -q -q -q install --user --upgrade "${package}"
+    else
+        pip2 -q -q -q install --user --upgrade "${package}"
     fi
     greydot
 done
