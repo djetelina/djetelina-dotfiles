@@ -3,27 +3,51 @@
 Classes for various packages.
 """
 import asyncio
+import logging
 from pathlib import PosixPath
 from typing import Union
 
 from utils import async_subprocess
 
+log = logging.getLogger(__name__)
+
 
 class BasePackage:
-    def is_installed(self) -> bool:
+    def __init__(self):
+        self.name = None
+
+    async def is_installed(self) -> bool:
         """
         :return: Whether the package is installed
         """
         pass
 
-    def install(self):
+    async def install(self):
         """
         Installs the package 
         """
         pass
 
+    def __str__(self):
+        return self.name
 
-# TODO apt and pip package classes
+
+# TODO apt package class
+
+class PipPackage(BasePackage):
+    """
+    Packages on pip
+    """
+    def __init__(self, name: str, pip2: bool=False):
+        self.name = name
+        self.pip = 'pip2' if pip2 else 'pip'
+
+    async def is_installed(self) -> bool:
+        not_installed = await async_subprocess(f'{self.pip} freeze | grep "{self.name}"'.split())
+        return not not_installed
+
+    async def install(self):
+        await async_subprocess(f'{self.pip} install --user {self.name}'.split())
 
 
 class NonPackage(BasePackage):
@@ -36,11 +60,12 @@ class NonPackage(BasePackage):
         self.command_dir: PosixPath = command_dir
         self.install_command: str = install_command
 
-    def is_installed(self) -> bool:
+    async def is_installed(self) -> bool:
         return self.exists_path.exists()
 
-    def install(self):
+    async def install(self):
         if self.command_dir is not None:
             # TODO uhhh, how does this work?
             pass
-        async_subprocess(asyncio.get_event_loop(), self.install_command.split(" "), silent=True)
+        await async_subprocess(self.install_command.split(" "), silent=True)
+

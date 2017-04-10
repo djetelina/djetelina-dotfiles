@@ -9,6 +9,21 @@ import packages
 
 HOME = Path.home()
 
+
+class AsyncList:
+    def __init__(self, *args):
+        self.list = iter(list(args))
+
+    async def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            return next(self.list)
+        except StopIteration as e:
+            raise StopAsyncIteration() from e
+
+
 # Directories to create if they don't already exist
 # These are created for vim plugins, so you can just clone into desired directory
 # without getting any errors
@@ -30,20 +45,15 @@ apt: List[str] = [
     'vim',
 ]
 
-# Pip packages to install for python 2.7
-pip2: List[str] = [
-    'powerline-status'
-]
-
-# Pip packages to install for default system python
-pip_default: List[str] = [
-    'python-jenkins',
-    'pydocstyle',
-    'flake8'
-]
+pip: AsyncList = AsyncList(
+    packages.PipPackage('powerline-status', pip2=True),
+    packages.PipPackage('python-jenkins'),
+    packages.PipPackage('pydocstyle'),
+    packages.PipPackage('flake8')
+)
 
 # Vim plugins to install
-vim_plugins: List[packages.NonPackage] = [
+vim_plugins: AsyncList = AsyncList(
     packages.NonPackage(
         name='pathogen',
         exists_path=HOME / '.vim' / 'autoload' / 'pathogen.vim',
@@ -69,10 +79,10 @@ vim_plugins: List[packages.NonPackage] = [
         install_command='curl -LSso ~/.vim/colors/monokai.vim '
                         'https://raw.githubusercontent.com/sickill/vim-monokai/master/colors/monokai.vim'
     )
-]
+)
 
 # Zsh plugins to install
-zsh_plugins: List[packages.NonPackage] = [
+zsh_plugins: AsyncList = AsyncList(
     packages.NonPackage(
         name='oh-my-zsh',
         exists_path=HOME / '.oh-my-zsh',
@@ -104,4 +114,4 @@ zsh_plugins: List[packages.NonPackage] = [
         command_dir=HOME / 'oh-my-zsh' / 'custom' / 'themes',
         install_command='git clone https://github.com/bhilburn/powerlevel9k.git'
     )
-]
+)
