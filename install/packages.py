@@ -2,7 +2,6 @@
 """
 Classes for various packages.
 """
-import asyncio
 import logging
 from pathlib import PosixPath
 from typing import Union
@@ -13,8 +12,8 @@ log = logging.getLogger(__name__)
 
 
 class BasePackage:
-    def __init__(self):
-        self.name = None
+    def __init__(self, name: str):
+        self.name: str = name
 
     async def is_installed(self) -> bool:
         """
@@ -38,16 +37,15 @@ class PipPackage(BasePackage):
     """
     Packages on pip
     """
-    def __init__(self, name: str, pip2: bool=False):
-        self.name = name
+    def __init__(self, name: str, pip2: bool = False):
+        super().__init__(name)
         self.pip = 'pip2' if pip2 else 'pip'
 
     async def is_installed(self) -> bool:
-        not_installed = await async_subprocess(f'{self.pip} freeze | grep "{self.name}"'.split())
-        return not not_installed
+        return await async_subprocess(f'{self.pip} freeze', grep=f"{self.name}")
 
     async def install(self):
-        await async_subprocess(f'{self.pip} install --user {self.name}'.split())
+        await async_subprocess(f'{self.pip} install --user {self.name}')
 
 
 class NonPackage(BasePackage):
@@ -55,7 +53,7 @@ class NonPackage(BasePackage):
     Various plugins etc. that aren't installed through any package manager, usually copied from git
     """
     def __init__(self, name: str, exists_path: PosixPath, command_dir: Union[PosixPath, None], install_command: str):
-        self.name: str = name
+        super().__init__(name)
         self.exists_path: PosixPath = exists_path
         self.command_dir: PosixPath = command_dir
         self.install_command: str = install_command
@@ -67,5 +65,4 @@ class NonPackage(BasePackage):
         if self.command_dir is not None:
             # TODO uhhh, how does this work?
             pass
-        await async_subprocess(self.install_command.split(" "), silent=True)
-
+        await async_subprocess(self.install_command, silent=True)

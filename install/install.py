@@ -5,9 +5,9 @@ import logging
 import os
 import subprocess
 from pathlib import Path, PosixPath
+from traceback import format_exc
 
 import requirements as reqs
-from utils import async_subprocess
 
 CURRENT_DIR: PosixPath = Path.cwd()
 SCRIPT_DIR: PosixPath = PosixPath(os.path.dirname(os.path.realpath(__file__))).parent
@@ -33,25 +33,26 @@ def install_apt():
     log.debug('Install apt end')
 
 
-async def install_pip(loop: asyncio.events.AbstractEventLoop):
+async def install_pip_package(package):
+    log.debug(f'Starting pip install of {package}')
+    installed = await package.is_installed()
+    string_installed = 'is' if installed else 'is not'
+    log.debug(f'Pip package {package} {string_installed} installed')
+    if not installed:
+        log.info(f'Pip package {package} needs to be installed, calling `{package.pip} install --user --upgrade`')
+        await package.install()
+    log.debug(f'Done with installing pip package {package}')
+
+
+async def install_pip(loop: asyncio.base_events.BaseEventLoop):
     """
     Installs all pip packages for both python2.7 and system default python
     
     :param loop:    Event loop
     """
     log.info('Checking and installing pip packages')
-    done = 0
     async for package in reqs.pip:
-        log.debug(f'Starting pip install of {package}')
-        installed = await package.is_installed()
-        string_installed = 'is' if installed else 'is not'
-        log.debug(f'Pip package {package} {string_installed} installed')
-        if not installed:
-            log.info(f'Pip package {package} needs to be installed, calling {package.pip} install --user --upgrade')
-            await package.install()
-        done += 1
-        log.debug(f'Done with installing pip package {package}')
-    log.debug('Install pip end')
+        asyncio.ensure_future(install_pip_package(package))
 
 
 def create_directories():
@@ -112,4 +113,11 @@ if __name__ == '__main__':
     log: logging.Logger = logging.getLogger()
     setup_logging()
     loop: asyncio.events.AbstractEventLoop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop))
+    try:
+        loop.run_until_complete(main(loop))
+        pending = asyncio.Task.all_tasks()
+        loop.run_until_complete(asyncio.gather(*pending))
+        log.debug('Closing loop')
+        loop.close()
+    except Exception as e:
+        log.error(f'Exception raised: {format_exc()}')
