@@ -12,8 +12,10 @@ log = logging.getLogger(__name__)
 
 
 class BasePackage:
+    """Base package"""
     def __init__(self, name: str):
         self.name: str = name
+        self._command = None
 
     async def is_installed(self) -> bool:
         """
@@ -27,8 +29,31 @@ class BasePackage:
         """
         pass
 
+    async def check_or_install(self):
+        """
+        Checks whether the package needs to be installed and if yes installs it
+        :return: 
+        """
+        log.debug(f'Starting check or install of {self.__class__.__name__} called {self.name}')
+        installed = await self.is_installed()
+        string_installed = 'is already' if installed else 'is not'
+        log.debug(f'{self} {string_installed} installed')
+        if not installed:
+            log.info(f"Requirement \033[00;34m'{self.name}'\033[0m needs to be installed, some action may be required.")
+            log.info(f'Now calling `{self.command}`')
+            await self.install()
+            log.info(f'{self} has been installed')
+
+    @property
+    def command(self):
+        return self._command
+
+    @command.setter
+    def command(self, command):
+        self._command = command
+
     def __str__(self):
-        return self.name
+        return '%s %s' % (self.__class__.__name__, self.name)
 
 
 # TODO apt package class
@@ -47,6 +72,10 @@ class PipPackage(BasePackage):
     async def install(self):
         await async_subprocess(f'{self.pip} install --user {self.name}')
 
+    @property
+    def command(self):
+        return f'{self.pip} install --user {self.name}'
+
 
 class NonPackage(BasePackage):
     """
@@ -57,6 +86,7 @@ class NonPackage(BasePackage):
         self.exists_path: PosixPath = exists_path
         self.command_dir: PosixPath = command_dir
         self.install_command: str = install_command
+        self.command = install_command
 
     async def is_installed(self) -> bool:
         return self.exists_path.exists()

@@ -21,22 +21,23 @@ async def async_subprocess(cmd: str, silent: bool=True, grep: Union[bool, str]=F
     :return:        Return code of the process
     """
     log.debug(f'Calling subprocess asynchronously: `{cmd}`')
-    await asyncio.sleep(2)
     stdin = sys.stdin if not silent else open(os.devnull, 'wb')
     stdout = sys.stdout if not silent else open(os.devnull, 'wb')
     stderr = sys.stderr if not silent else open(os.devnull, 'wb')
     if grep:
         stdout = asyncio.subprocess.PIPE
+
     proc = await asyncio.create_subprocess_exec(
         *cmd.split(), stdin=stdin, stdout=stdout, stderr=stderr
     )
+
     if grep:
         output, err_out = await proc.communicate()
         is_present = grep in output.decode()
-        log.debug(f'{grep} in output: {is_present}')
         return is_present
     else:
         await proc.wait()
+
     return_code: int = proc.returncode
     log.debug(f'{return_code} was returned by subprocess `{cmd}`')
     return return_code
