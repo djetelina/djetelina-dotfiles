@@ -4,6 +4,7 @@ import asyncio
 import logging
 import os
 import subprocess
+import argparse
 from pathlib import Path, PosixPath
 from traceback import format_exc
 from typing import List, Callable
@@ -15,9 +16,7 @@ SCRIPT_DIR: PosixPath = PosixPath(os.path.dirname(os.path.realpath(__file__))).p
 
 
 def install_apt():
-    """
-    Installs all apt packages
-    """
+    """Installs all apt packages"""
     log.info('Checking and installing apt packages')
     done = 0
     for package in reqs.apt:
@@ -46,9 +45,7 @@ async def install_pip():
 
 
 def create_directories():
-    """
-    Creates all required directories if they don't exist
-    """
+    """Creates all required directories if they don't exist"""
     #TODO the new loading bar should soon be ready
     log.debug('Create directories start')
     done = 0
@@ -62,12 +59,13 @@ def create_directories():
     log.debug('Create directories end')
 
 
-async def main(loop):
-    """
-    Main function, it's important not to mess around with the order.
-    
-    :param loop:    Event loop
-    """
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Script for setting up workplace on Debian based systems')
+    parser.add_argument('logging') #TODO
+
+
+async def main():
+    """Main function, it's important not to mess around with the order."""
     log.debug('Starting the main function')
     create_directories()
     install_apt()
@@ -101,15 +99,14 @@ def setup_logging():
 
 
 if __name__ == '__main__':
-    # TODO argparse
     log: logging.Logger = logging.getLogger()
     setup_logging()
     loop: asyncio.events.AbstractEventLoop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main(loop))
+        loop.run_until_complete(main())
         pending = asyncio.Task.all_tasks()
         loop.run_until_complete(asyncio.gather(*pending))
         log.debug('Closing loop')
         loop.close()
     except Exception as e:
-        log.error(f'Exception raised: {format_exc()}')
+        log.error(f'Something unexpected happened:\n\n{format_exc()}')

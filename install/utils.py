@@ -1,7 +1,5 @@
 # coding=utf-8
-"""
-Utility functions
-"""
+"""Utility functions"""
 import asyncio
 import logging
 import os

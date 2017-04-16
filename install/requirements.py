@@ -31,10 +31,10 @@ apt: List[str] = [
 ]
 
 pip: List[packages.PipPackage] = [
-    packages.PipPackage('powerline-status', pip2=True),
-    packages.PipPackage('python-jenkins'),
-    packages.PipPackage('pydocstyle'),
-    packages.PipPackage('flake8')
+    packages.PipPackage(name='powerline-status', pip2=True),
+    packages.PipPackage(name='python-jenkins'),
+    packages.PipPackage(name='pydocstyle'),
+    packages.PipPackage(name='flake8')
 ]
 
 # Vim plugins to install

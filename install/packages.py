@@ -1,7 +1,6 @@
 # coding=utf-8
-"""
-Classes for various packages.
-"""
+"""Classes for various packages."""
+import os
 import logging
 from pathlib import PosixPath
 from typing import Union
@@ -24,16 +23,11 @@ class BasePackage:
         pass
 
     async def install(self):
-        """
-        Installs the package 
-        """
+        """Installs the package"""
         pass
 
     async def check_or_install(self):
-        """
-        Checks whether the package needs to be installed and if yes installs it
-        :return: 
-        """
+        """Checks whether the package needs to be installed and if yes installs it"""
         log.debug(f'Starting check or install of {self.__class__.__name__} called {self.name}')
         installed = await self.is_installed()
         string_installed = 'is already' if installed else 'is not'
@@ -59,9 +53,7 @@ class BasePackage:
 # TODO apt package class
 
 class PipPackage(BasePackage):
-    """
-    Packages on pip
-    """
+    """Packages on pip"""
     def __init__(self, name: str, pip2: bool = False):
         super().__init__(name)
         self.pip = 'pip2' if pip2 else 'pip'
@@ -93,6 +85,5 @@ class NonPackage(BasePackage):
 
     async def install(self):
         if self.command_dir is not None:
-            # TODO uhhh, how does this work?
-            pass
+            os.chdir(str(self.command_dir))
         await async_subprocess(self.install_command, silent=True)
