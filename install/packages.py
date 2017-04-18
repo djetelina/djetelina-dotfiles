@@ -2,6 +2,7 @@
 """Classes for various packages."""
 import os
 import logging
+import subprocess
 from pathlib import PosixPath
 from typing import Union
 
@@ -50,7 +51,20 @@ class BasePackage:
         return '%s %s' % (self.__class__.__name__, self.name)
 
 
-# TODO apt package class
+class AptPackage(BasePackage):
+    """Apt packages"""
+    def __init__(self, name: str):
+        super().__init__(name)
+
+    async def is_installed(self):
+        """Not actually async, because of dpkg lock"""
+        not_installed = subprocess.call(f'dpkg-query -s {self.name}'.split(),
+                                        stdin=open(os.devnull, 'wb'), stdout=open(os.devnull, 'wb'))
+        return not not_installed
+
+    async def install(self):
+        subprocess.call(f'sudo apt-get install {self.name}'.split())
+
 
 class PipPackage(BasePackage):
     """Packages on pip"""

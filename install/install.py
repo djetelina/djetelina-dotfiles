@@ -13,6 +13,7 @@ import requirements as reqs
 
 CURRENT_DIR: PosixPath = Path.cwd()
 SCRIPT_DIR: PosixPath = PosixPath(os.path.dirname(os.path.realpath(__file__))).parent
+log: logging.Logger = logging.getLogger()
 
 
 def install_apt():
@@ -59,27 +60,16 @@ def create_directories():
     log.debug('Create directories end')
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(description='Script for setting up workplace on Debian based systems')
-    parser.add_argument('logging') #TODO
-
-
-async def main():
-    """Main function, it's important not to mess around with the order."""
-    log.debug('Starting the main function')
-    create_directories()
-    install_apt()
-    async_installs: List[Callable] = [install_pip]
-    for item in async_installs:
-        asyncio.ensure_future(item())
-
-
-def setup_logging():
+def setup_logging(verbose: bool):
     """Sets up logging"""
     log.setLevel(logging.DEBUG)
 
     console: logging.Handler = logging.StreamHandler()
-    console.setLevel(logging.INFO)
+    if verbose:
+        console.setLevel(logging.DEBUG)
+    else:
+        console.setLevel(logging.INFO)
+
     formatter_console: logging.Formatter = logging.Formatter(
         '\033[92m{asctime}\033[0m: '
         '{message}',
@@ -98,9 +88,30 @@ def setup_logging():
     log.addHandler(log_file)
 
 
-if __name__ == '__main__':
-    log: logging.Logger = logging.getLogger()
-    setup_logging()
+def parse_arguments():
+    """Good old argparse argparse"""
+    parser = argparse.ArgumentParser(
+        prog='djetelina-dotfiles',
+        description='Script for setting up workplace on Debian based systems'
+    )
+    parser.add_argument('-d', '--debug', help='Increase output verbosity', action='store_true')
+    args = parser.parse_args()
+    return args
+
+
+async def main():
+    """Main function, it's important not to mess around with the order."""
+    log.debug('Starting the main function')
+    create_directories()
+    install_apt()
+    async_installs: List[Callable] = [install_pip]
+    for item in async_installs:
+        asyncio.ensure_future(item())
+
+
+def start():
+    arguments = parse_arguments()
+    setup_logging(arguments.debug)
     loop: asyncio.events.AbstractEventLoop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main())
@@ -110,3 +121,7 @@ if __name__ == '__main__':
         loop.close()
     except Exception as e:
         log.error(f'Something unexpected happened:\n\n{format_exc()}')
+
+
+if __name__ == '__main__':
+    start()

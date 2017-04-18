@@ -2,7 +2,6 @@
 """
 Config-like file, if you want to install different packages and/or plugins, edit this file only.
 """
-import os
 from pathlib import Path, PosixPath
 from typing import List
 
@@ -19,15 +18,15 @@ directories: List[PosixPath] = [
 ]
 
 # Apt packages to install
-apt: List[str] = [
-    'python2.7',
-    'shellcheck',
-    'python-pip',
-    'python3-pip',
-    'python3.6',
-    'zsh',
-    'curl',
-    'vim',
+apt: List[packages.AptPackage] = [
+    packages.AptPackage(name='python2.7'),
+    packages.AptPackage(name='shellcheck'),
+    packages.AptPackage(name='python-pip'),
+    packages.AptPackage(name='python3-pip'),
+    packages.AptPackage(name='python3.6'),
+    packages.AptPackage(name='zsh'),
+    packages.AptPackage(name='curl'),
+    packages.AptPackage(name='vim'),
 ]
 
 pip: List[packages.PipPackage] = [
