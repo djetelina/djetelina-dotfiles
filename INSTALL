@@ -55,7 +55,7 @@ fi
 printf "${BLUE}\nChecking and installing dependencies${CLEAR}\n"
 
 # apt section
-needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim) 
+needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim apt-listchanges) 
 
 header "apt"
 for package in "${needed_packages[@]}"; do
@@ -204,5 +204,8 @@ printf "\n${BLUE}Creating symlinks for dotfiles${CLEAR}\n"
 for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
 done
+
+printf "\n${BLUE}Copying config files${CLEAR}\n"
+sudo ln -sf "$script_dir/listchanges.conf" "/etc/apt/listchanges.conf"
 
 printf "\n${GREEN}All done!${CLEAR}\n"
