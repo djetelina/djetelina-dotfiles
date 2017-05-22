@@ -160,6 +160,15 @@ else
     greydot
 fi
 
+# autosuggestions
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+    printf "\n${BLUE}zsh-autosuggestions required${CLEAR}\n"
+    git clone git://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    ok_installed zsh-autosuggestions
+else
+    greydot
+fi
+
 # directory history
 if [ ! -e "/usr/bin/dirhist" ]; then
     printf "\n${BLUE}zsh-directory-history required${CLEAR}\n"
