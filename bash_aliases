@@ -20,3 +20,7 @@ alias biexport='ssh root@kz-biexport.dev'
 
 ## Luluovo master virtual
 alias pantheon='ssh djetelina@vs-pantheon.dev'
+
+# Docker
+alias wheezy="ssh developer@clientzone_wheezy.docker -p 2222"
+alias jessie="ssh developer@clientzone_jessie.docker -p 2223"
