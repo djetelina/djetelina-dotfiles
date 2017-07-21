@@ -17,7 +17,6 @@ alias terminator='ssh root@terminator.test'
 alias payweb='ssh root@wallet-payweb-wheezy.dev'
 alias admintest='ssh root@wallet-adminweb-wheezy.test'
 alias debian='ssh david.jetelina@debian.kancelar.seznam.cz'
-alias biexport='ssh root@kz-biexport.dev'
 
 ## Luluovo master virtual
 alias pantheon='ssh djetelina@vs-pantheon.dev'
