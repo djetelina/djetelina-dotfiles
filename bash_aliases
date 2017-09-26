@@ -16,6 +16,7 @@ alias gaiwan='ssh root@vs-gaiwan.dev'
 alias terminator='ssh root@terminator.test'
 alias payweb='ssh root@wallet-payweb-wheezy.dev'
 alias admintest='ssh root@wallet-adminweb-wheezy.test'
+alias admindev='ssh root@wallet-adminweb-wheezy.dev'
 alias debian='ssh david.jetelina@debian.kancelar.seznam.cz'
 
 ## Luluovo master virtual
