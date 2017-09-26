@@ -197,11 +197,11 @@ checks_done
 printf "${BLUE}Updating plugins and themes${CLEAR}\n"
 header "zsh"
 # Find all folders called .git in X and execute this in them:
-find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
-find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
+find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
 checks_done
 header "vim"
-find "$HOME/.vim" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+find "$HOME/.vim" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
 checks_done
 
 #####################################
