@@ -22,7 +22,7 @@ export BROWSER='chrome'
 ###################
 # PLUGIN SELECTOR #
 ###################
-plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv heroku zsh-autosuggestions kubectl)
+plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv heroku zsh-autosuggestions kubectl pip sudo)
 
 ############################
 # DIRECTORY HISTORY PLUGIN #
@@ -51,7 +51,7 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
 POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable root_indicator)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs command_execution_time virtualenv vcs time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs command_execution_time kubecontext virtualenv vcs time)
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND="black"
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND="green"
 POWERLEVEL9K_TIME_BACKGROUND="black"
@@ -72,6 +72,8 @@ POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND="black"
 POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND="green"
 POWERLEVEL9K_VIRTUALENV_BACKGROUND="black"
 POWERLEVEL9K_VIRTUALENV_FOREGROUND="green"
+POWERLEVEL9K_KUBECONTEXT_BACKGROUND="green"
+POWERLEVEL9K_KUBECONTEXT_FOREGROUND="black"
 
 ###############
 # KEYBINDINGS #

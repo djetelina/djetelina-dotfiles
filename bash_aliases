@@ -25,3 +25,4 @@ alias pantheon='ssh djetelina@vs-pantheon.dev'
 # Docker
 alias wheezy="ssh developer@clientzone_wheezy.docker -p 2222"
 alias jessie="ssh developer@clientzone_jessie.docker -p 2223"
+alias stretch="ssh developer@stretch.docker -p 2224"
