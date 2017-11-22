@@ -22,7 +22,7 @@ export BROWSER='chrome'
 ###################
 # PLUGIN SELECTOR #
 ###################
-plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv heroku zsh-autosuggestions kubectl pip sudo)
+plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv heroku zsh-autosuggestions pip sudo)
 
 ############################
 # DIRECTORY HISTORY PLUGIN #

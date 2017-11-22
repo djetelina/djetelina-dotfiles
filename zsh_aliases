@@ -1,6 +1,7 @@
 # Aliases that are meant to be for zsh only - not compatible with bash
 
 alias zshconfig="vim ~/.zshrc"
+alias i3config="vim ~/.config/i3/config"
 
 # ls -> k
 alias l="k -h"

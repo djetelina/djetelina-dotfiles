@@ -1,5 +1,12 @@
 #!/bin/bash
 
+########
+# TODO #
+########
+# Fonts (nerdfonts)
+# i3blocks-contrib (clone all?)
+# primary output
+
 ####################
 # HELPER VARIABLES #
 ####################
@@ -55,7 +62,8 @@ fi
 printf "${BLUE}\nChecking and installing dependencies${CLEAR}\n"
 
 # apt section
-needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim apt-listchanges) 
+needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim apt-listchanges
+                i3 i3lock i3blocks i3status) 
 
 header "apt"
 for package in "${needed_packages[@]}"; do
@@ -207,14 +215,18 @@ checks_done
 #####################################
 # COPY ALL .FILES TO HOME DIRECTORY #
 #####################################
-home_files=(zshrc bash_aliases zsh_aliases vimrc)
+home_files=(zshrc bash_aliases zsh_aliases vimrc i3blocks.conf)
 
 printf "\n${BLUE}Creating symlinks for dotfiles${CLEAR}\n"
 for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
+    greydot
 done
 
 printf "\n${BLUE}Copying config files${CLEAR}\n"
 sudo ln -sf "$script_dir/listchanges.conf" "/etc/apt/listchanges.conf"
+greydot
+ln -sf "$script_dir/i3config" "/$HOME/.config/i3/config"
+greydot
 
 printf "\n${GREEN}All done!${CLEAR}\n"
