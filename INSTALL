@@ -271,11 +271,15 @@ def main():
 
     print(green('\n{0:^{width}}').format('symlinking', width=OUTPUT_WIDTH))
     print(green('=' * OUTPUT_WIDTH))
-    dotfiles = ['zshrc', 'bash_aliases', 'zsh_aliases', 'vimrc', 'i3blocks.conf']
+    dotfiles = ['zshrc', 'bash_aliases', 'zsh_aliases', 'vimrc']
     for file in dotfiles:
         symlink(file, prepend='.')
     symlink('listchanges.conf', destination='/etc/apt', password=password)
-    symlink('i3config', destination='{}/.config/i3'.format(HOME), target_name='config')
+    if gui_packages:
+        dotfiles_gui = ['i3blocks.conf']
+        for file in dotfiles_gui:
+            symlink(file, prepend='.')
+        symlink('i3config', destination='{}/.config/i3'.format(HOME), target_name='config')
 
 
 if __name__ == '__main__':
