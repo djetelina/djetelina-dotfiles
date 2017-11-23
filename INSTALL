@@ -181,8 +181,7 @@ def main():
                                                                    spacing=OUTPUT_WIDTH - LONGEST_STATUS))
     elif 'INSTALL' in buf.getvalue():
         print(buf.getvalue())
-        print(blue('Changes in install script detected, restarting.\n'))
-        main()
+        print(blue('Changes in install script detected, please run it again.\n'))
         return
     else:
         print('{package:.<{spacing}}{status:.>29}         \n'.format(package='git pull', status=green('updated'),
