@@ -182,6 +182,6 @@ bindsym Pause exec i3lock -i /home/david/Downloads/junkrat_wallpaper.png -t
 
 assign [class="Spotify"] $ws2
 assign [class="Mattermost"] $ws2
-assign [class="Chrome"] $ws3
+assign [window_role="browser"] $ws3
 assign [class="^jetbrains-pycharm$"] $ws4
 assign [class="Thunderbird"] $ws5
