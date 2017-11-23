@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 async def async_subprocess(cmd: str, silent: bool=True, grep: Union[bool, str]=False) -> Union[bool, int]:
     """
     Wrapper around :pyfunc:`asyncio.create_subprocess_exec` for easier use (silent/non-silent running)
-    
+
     :param cmd:     Command to run, split into a list
     :param silent:  Whether stdin and stdout should communicate with user, or if it should run in silence
     :param grep:    Completely changes the behavior and instead returns whether this string is in the first's output
