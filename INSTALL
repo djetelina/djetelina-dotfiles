@@ -169,12 +169,14 @@ def main():
         print(red('Unrecognized input'))
         sys.exit(1)
 
+    sh.cd(SCRIPT_DIR)
+
     print(green('\n{0:^{width}}').format('self', width=OUTPUT_WIDTH))
     print(green('=' * OUTPUT_WIDTH))
     print('{package:.<{spacing}}{status:.>29}\r'.format(package='git pull', status=blue('updating'),
                                                         spacing=OUTPUT_WIDTH - LONGEST_STATUS), end='\r')
     buf = StringIO()
-    p = sh.git.pull(_bg=True, _out=buf, _cwd=SCRIPT_DIR)
+    p = sh.git.pull(_bg=True, _out=buf)
     p.wait()
     if 'up-to-date' in buf.getvalue():
         print('{package:.<{spacing}}{status:.>29}         '.format(package='git pull', status=grey('up to date'),
