@@ -203,7 +203,7 @@ def main():
             install_apt_package(package, password)
 
     pip2_packages = ['powerline-status']
-    default_pip_packages = ['pydocstyle', 'flake8', 'pipenv', 'kubectl']
+    default_pip_packages = ['pydocstyle', 'flake8', 'pipenv']
 
     print(green('\n{0:^{width}}').format('python2 packages', width=OUTPUT_WIDTH))
     print(green('=' * OUTPUT_WIDTH))
