@@ -174,7 +174,7 @@ def main():
     print('{package:.<{spacing}}{status:.>29}\r'.format(package='git pull', status=blue('updating'),
                                                         spacing=OUTPUT_WIDTH - LONGEST_STATUS), end='\r')
     buf = StringIO()
-    p = sh.git.pull(_bg=True, _out=buf)
+    p = sh.git.pull(_bg=True, _out=buf, _cwd=SCRIPT_DIR)
     p.wait()
     if 'up-to-date' in buf.getvalue():
         print('{package:.<{spacing}}{status:.>29}         '.format(package='git pull', status=grey('up to date'),
