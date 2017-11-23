@@ -5,7 +5,16 @@ import os
 import sys
 from io import StringIO
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.extend(SCRIPT_DIR)
+
 import sh
+try:
+    sh.which('pip2')
+except sh.ErrorReturnCode_1:
+    from sh import pip as pip2
+else:
+    from sh import pip2
 
 
 def red(text):
@@ -120,11 +129,25 @@ def install_from_script(name, test_file, remote_script_location):
                                                           spacing=OUTPUT_WIDTH - LONGEST_STATUS))
 
 
+def symlink(file, prepend='', destination=HOME, password=False, target_name=None):
+    if target_name is None:
+        target_name = file
+    target = '{}/{}{}'.format(destination, prepend, target_name)
+    source = '{}/{}'.format(SCRIPT_DIR, file)
+    if password:
+        with sh.contrib.sudo(password=password, _with=True):
+            sh.ln('-sf', source, target)
+    else:
+        sh.ln('-sf', source, target)
+    # print('{0}'.format(target))
+    print('{package:.<{spacing}}{status:.>29}'.format(package=target, status=grey('done'),
+                                                      spacing=OUTPUT_WIDTH - LONGEST_STATUS))
+
+
 def main():
     print(green('#' * OUTPUT_WIDTH))
     print(green('# {0:^{width}} #').format('DJetelina .files', width=OUTPUT_WIDTH-4))
     print(green('#' * OUTPUT_WIDTH))
-    sh.git('pull')
 
     if sh.whoami() == 'root':
         password = None
@@ -146,6 +169,21 @@ def main():
         print(red('Unrecognized input'))
         sys.exit(1)
 
+    print(green('\n{0:^{width}}').format('self', width=OUTPUT_WIDTH))
+    print(green('=' * OUTPUT_WIDTH))
+    print('{package:.<{spacing}}{status:.>29}\r'.format(package='git pull', status=blue('updating'),
+                                                        spacing=OUTPUT_WIDTH - LONGEST_STATUS), end='\r')
+    buf = StringIO()
+    p = sh.git.pull(_bg=True, _out=buf)
+    p.wait()
+    if 'up-to-date' in buf.getvalue():
+        print('{package:.<{spacing}}{status:.>29}         '.format(package='git pull', status=grey('up to date'),
+                                                                   spacing=OUTPUT_WIDTH - LONGEST_STATUS))
+    else:
+        print('{package:.<{spacing}}{status:.>29}         \n'.format(package='git pull', status=green('updated'),
+                                                                     spacing=OUTPUT_WIDTH - LONGEST_STATUS))
+        print(buf.getvalue())
+
     apt_basic = ['python2.7', 'shellcheck', 'python-pip', 'python3-pip', 'zsh', 'curl', 'vim', 'apt-listchanges']
     apt_gui = ['i3', 'i3lock', 'i3blocks', 'i3status']
 
@@ -161,13 +199,6 @@ def main():
 
     pip2_packages = ['powerline-status']
     default_pip_packages = ['pydocstyle', 'flake8', 'pipenv']
-
-    try:
-        sh.which('pip2')
-    except sh.ErrorReturnCode_1:
-        from sh import pip as pip2
-    else:
-        from sh import pip2
 
     print(green('\n{0:^{width}}').format('python2 packages', width=OUTPUT_WIDTH))
     print(green('=' * OUTPUT_WIDTH))
@@ -238,8 +269,13 @@ def main():
                      ['https://github.com/bhilburn/powerlevel9k.git'],
                      workdir='~/.oh-my-zsh/custom/themes'.replace('~', HOME))
 
-    print(green('\n{0:^{width}}').format('symlinking dotfiles', width=OUTPUT_WIDTH))
+    print(green('\n{0:^{width}}').format('symlinking', width=OUTPUT_WIDTH))
     print(green('=' * OUTPUT_WIDTH))
+    dotfiles = ['zshrc', 'bash_aliases', 'zsh_aliases', 'vimrc', 'i3blocks.conf']
+    for file in dotfiles:
+        symlink(file, prepend='.')
+    symlink('listchanges.conf', destination='/etc/apt', password=password)
+    symlink('i3config', destination='{}/.config/i3'.format(HOME), target_name='config')
 
 
 if __name__ == '__main__':
