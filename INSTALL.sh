@@ -1,5 +1,12 @@
 #!/bin/bash
 
+########
+# TODO #
+########
+# Fonts (nerdfonts)
+# i3blocks-contrib (clone all?)
+# primary output
+
 ####################
 # HELPER VARIABLES #
 ####################
@@ -55,7 +62,8 @@ fi
 printf "${BLUE}\nChecking and installing dependencies${CLEAR}\n"
 
 # apt section
-needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim) 
+needed_packages=(python2.7 shellcheck python-pip python3-pip zsh curl vim apt-listchanges
+                i3 i3lock i3blocks i3status) 
 
 header "apt"
 for package in "${needed_packages[@]}"; do
@@ -71,8 +79,8 @@ checks_done
 # pip install section
 # vim sources powerline form 2.7 - todo i guess?
 pip2_packages=(powerline-status)
-default_pip_packages=(python-jenkins pydocstyle flake8)
-pip2 > /dev/null &>2
+default_pip_packages=(pydocstyle flake8)
+pip2  &>/dev/null
 pip2_status=$?
 
 header "pip"
@@ -160,6 +168,15 @@ else
     greydot
 fi
 
+# autosuggestions
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+    printf "\n${BLUE}zsh-autosuggestions required${CLEAR}\n"
+    git clone git://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    ok_installed zsh-autosuggestions
+else
+    greydot
+fi
+
 # directory history
 if [ ! -e "/usr/bin/dirhist" ]; then
     printf "\n${BLUE}zsh-directory-history required${CLEAR}\n"
@@ -188,21 +205,28 @@ checks_done
 printf "${BLUE}Updating plugins and themes${CLEAR}\n"
 header "zsh"
 # Find all folders called .git in X and execute this in them:
-find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
-find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+find "$HOME/.oh-my-zsh" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
+find "$HOME/zsh-directory-history" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
 checks_done
 header "vim"
-find "$HOME/.vim" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull -q" \;
+find "$HOME/.vim" -type d -name .git -exec sh -c "cd \"{}\"/../ && printf \"${LIGHTGRAY}.${CLEAR}\" && git pull" \;
 checks_done
 
 #####################################
 # COPY ALL .FILES TO HOME DIRECTORY #
 #####################################
-home_files=(zshrc bash_aliases zsh_aliases vimrc)
+home_files=(zshrc bash_aliases zsh_aliases vimrc i3blocks.conf)
 
 printf "\n${BLUE}Creating symlinks for dotfiles${CLEAR}\n"
 for dotfile in "${home_files[@]}"; do
     ln -sf "$script_dir/$dotfile" "$HOME/.$dotfile"
+    greydot
 done
+
+printf "\n${BLUE}Copying config files${CLEAR}\n"
+sudo ln -sf "$script_dir/listchanges.conf" "/etc/apt/listchanges.conf"
+greydot
+ln -sf "$script_dir/i3config" "/$HOME/.config/i3/config"
+greydot
 
 printf "\n${GREEN}All done!${CLEAR}\n"
