@@ -179,6 +179,11 @@ def main():
     if 'up-to-date' in buf.getvalue():
         print('{package:.<{spacing}}{status:.>29}         '.format(package='git pull', status=grey('up to date'),
                                                                    spacing=OUTPUT_WIDTH - LONGEST_STATUS))
+    elif 'INSTALL' in buf.getvalue():
+        print(buf.getvalue())
+        print(blue('Changes in install script detected, restarting.\n'))
+        main()
+        return
     else:
         print('{package:.<{spacing}}{status:.>29}         \n'.format(package='git pull', status=green('updated'),
                                                                      spacing=OUTPUT_WIDTH - LONGEST_STATUS))
