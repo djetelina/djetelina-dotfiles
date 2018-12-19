@@ -1,0 +1,14 @@
+- name: Linking dotfiles to home
+  file:
+    src: '{{ playbook_dir }}/files/{{ item.src }}'
+    dest: '~/ansible-pok/{{ item.name}}'
+    state: link
+  with_items: '{{ dotfiles_all }}'
+
+- name: Linking linux specific dotfiles to home
+  file:
+    src: '{{ playbook_dir }}/files/{{ item.src }}'
+    dest: '~/ansible-pok/{{ item.name}}'
+    state: link
+  with_items: '{{ dotfiles_linux }}'
+  when: ansible_os_family != 'Darwin'

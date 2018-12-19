@@ -1,0 +1,5 @@
+- name: Downloading VIM color scheme
+  shell: curl -LSso ~/ansible-pok/.vim/colors/monokai.vim https://raw.githubusercontent.com/sickill/vim-monokai/master/colors/monokai.vim
+#  get_url:
+#    url: https://raw.githubusercontent.com/sickill/vim-monokai/master/colors/monokai.vim
+#    dest: ~/asnible-pok/.vim/colors/

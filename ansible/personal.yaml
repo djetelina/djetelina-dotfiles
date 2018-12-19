@@ -1,0 +1,13 @@
+- name: Preparing personal computer
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - vars/brew.yaml
+    - vars/cask.yaml
+    - vars/dotfiles.yaml
+  tasks:
+    - include_tasks: tasks/packages/brew.yaml
+      when: ansible_os_family == 'Darwin'
+    - include_tasks: tasks/tune_vim.yaml
+    - include_tasks: tasks/tune_zsh.yaml
+    - include_tasks: tasks/link_dotfiles.yaml

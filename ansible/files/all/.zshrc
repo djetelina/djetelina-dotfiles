@@ -9,7 +9,7 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd.mm.yyyy"
 # Some variables
-export PATH=$PATH:~/.local/bin:~/mygo/bin:/usr/local/bin/:$HOME/.scli/bin
+export PATH=$PATH:~/.local/bin:~/mygo/bin:/usr/local/bin/:$HOME/Library/Python/3.6/bin/:/usr/local/opt/libressl/bin
 fpath+=~/.zfunc
 export fpath=(~/.scli/zsh_completion.d $fpath); autoload -U compinit && compinit
 export ZSH=~/.oh-my-zsh
@@ -19,22 +19,13 @@ export EDITOR='vim'
 export BROWSER="open /Applications/Google\ Chrome.app/"
 #Linux commit signing
 export GPG_TTY=$(tty)
+export CPPFLAGS=-I/usr/local/opt/openssl/include
+export LDFLAGS=-L/usr/local/opt/openssl/lib
 
 ###################
 # PLUGIN SELECTOR #
 ###################
-plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv zsh-autosuggestions pip heroku) 
-
-############################
-# DIRECTORY HISTORY PLUGIN #
-############################
-# No oh-my-zsh hook :(
-source ~/.oh-my-zsh/custom/plugins/zsh-directory-history/directory-history.plugin.zsh
-# Some key bindings for this
-bindkey '\e[A' directory-history-search-backward
-bindkey '\e[B' directory-history-search-forward
-bindkey '^j' history-substring-search-up
-bindkey '^k' history-substring-search-down
+plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv zsh-autosuggestions pip heroku)
 
 ###########
 # THEMING #
@@ -92,17 +83,10 @@ bindkey "\e\eOC" forward-word
 source ~/.bash_aliases
 source ~/.zsh_aliases
 
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 #----------------------------------------------------------------------
 
 # Load oh-my-zsh, this should always be at the bottom
 source $ZSH/oh-my-zsh.sh
 unsetopt correct_all
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-export PATH="/usr/local/opt/libressl/bin:$PATH"
-
-alias openstack='scli openstack'
-
-export CPPFLAGS=-I/usr/local/opt/openssl/include
-export LDFLAGS=-L/usr/local/opt/openssl/lib

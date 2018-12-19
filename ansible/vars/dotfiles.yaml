@@ -1,0 +1,15 @@
+dotfiles_all:
+  - src: all/.bash_aliases
+    name: .bash_aliases
+  - src: all/.vimrc
+    name: .vimrc
+  - src: all/.zshrc
+    name: .zshrc
+  - src: all/.zsh_aliases
+    name: .zsh_aliases
+
+dotfiles_linux:
+  - src: linux/.i3blocks.conf
+    name: .i3blocks.conf
+  - src: linux/.i3config
+    name: .i3config

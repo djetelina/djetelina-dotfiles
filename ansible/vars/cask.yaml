@@ -1,0 +1,16 @@
+cask_packages:
+  - appcleaner
+  - docker
+  - font-dejavusansmono-nerd-font
+  - font-dejavusansmono-nerd-font-mono
+  - font-firamono-nerd-font-mono
+  - font-hack-nerd-font
+  - font-ubuntumono-nerd-font
+  - google-chrome
+  - iterm2
+  - slack
+  - sublime-text
+  - 1password
+  - keybase
+  - jetbrains-toolbox
+  - thunderbird

@@ -1,0 +1,29 @@
+- name: Checking if brew is present
+  shell: command -v brew >/dev/null 2>&1
+  register: brew_installed
+  ignore_errors: yes
+- name: Installing brew
+  shell: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  when: brew_installed.rc != 0
+
+- name: Tapping brews :)
+  homebrew_tap:
+    name: koekeishiya/formulae
+    state: present
+
+- name: Updating homebrew
+  homebrew:
+    update_homebrew: yes
+
+- name: Installing/upgrading homebrew packages
+  homebrew:
+    state: latest
+    name: '{{ item }}'
+  with_items: '{{ brew_packages }}'
+
+- name: Installing/upgrading homebrew cask applications
+  homebrew_cask:
+    state: upgraded
+    name: '{{ item }}'
+  with_items: '{{ cask_packages }}'
+  ignore_errors: yes
