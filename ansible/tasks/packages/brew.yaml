@@ -6,9 +6,14 @@
   shell: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   when: brew_installed.rc != 0
 
-- name: Tapping brews :)
+- name: Tapping brews - formulae
   homebrew_tap:
     name: koekeishiya/formulae
+    state: present
+
+- name: Tapping brews - fonts
+  homebrew_tap:
+    name: caskroom/fonts
     state: present
 
 - name: Updating homebrew
