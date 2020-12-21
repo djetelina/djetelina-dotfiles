@@ -9,7 +9,8 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 HIST_STAMPS="dd.mm.yyyy"
 # Some variables
-export PATH=$PATH:~/.local/bin:~/mygo/bin:/usr/local/bin/:$HOME/Library/Python/3.6/bin/:/usr/local/opt/libressl/bin
+export PATH=/usr/local/opt/python/libexec/bin:$PATH:~/.local/bin:~/mygo/bin:/usr/local/bin/:/usr/local/opt/python@3.8/bin:$HOME/Library/Python/3.7/bin/:/usr/local/opt/libressl/bin:$HOME/.poetry/bin:${KREW_ROOT:-$HOME/.krew}/bin:/usr/local/sbin
+poetry completions zsh > ~/.zfunc/_poetry
 fpath+=~/.zfunc
 export fpath=(~/.scli/zsh_completion.d $fpath); autoload -U compinit && compinit
 export ZSH=~/.oh-my-zsh
@@ -25,7 +26,7 @@ export LDFLAGS=-L/usr/local/opt/openssl/lib
 ###################
 # PLUGIN SELECTOR #
 ###################
-plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv zsh-autosuggestions pip heroku)
+plugins=(command-not-found debian gitfast k zsh-syntax-highlighting dotenv zsh-autosuggestions pip heroku helm)
 
 ###########
 # THEMING #
@@ -83,10 +84,13 @@ bindkey "\e\eOC" forward-word
 source ~/.bash_aliases
 source ~/.zsh_aliases
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 #----------------------------------------------------------------------
 
 # Load oh-my-zsh, this should always be at the bottom
 source $ZSH/oh-my-zsh.sh
 unsetopt correct_all
+
+
+export PATH="$HOME/.poetry/bin:$PATH"
